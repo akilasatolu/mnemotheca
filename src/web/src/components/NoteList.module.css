@@ -1,4 +1,4 @@
-/* NoteList — 右ペインのノート一覧(設計 §11-1 CSS Modules)。 */
+/* NoteList — 右ペインのノート一覧(Material Design 3)。 */
 .root {
   min-width: 0;
 }
@@ -7,18 +7,30 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .orderBtn {
   font: inherit;
+  font-weight: 500;
   cursor: pointer;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--md-shape-full);
+  border: 1px solid var(--md-outline);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  transition: background var(--md-motion-fast);
+}
+
+.orderBtn:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
 }
 
 .count {
   margin-left: auto;
-  color: #888;
-  font-size: 13px;
+  color: var(--md-on-surface-variant);
+  font-size: 0.8125rem;
 }
 
 .scroll {

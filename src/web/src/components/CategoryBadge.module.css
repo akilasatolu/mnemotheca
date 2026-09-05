@@ -1,16 +1,18 @@
-/* CategoryBadge — カテゴリ経路バッジ(設計 §11-1 CSS Modules)。 */
+/* CategoryBadge — カテゴリ経路バッジ(Material Design 3: assist chip)。 */
 .badge {
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--md-shape-sm);
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  font-size: 0.75rem;
+  font-weight: 500;
   text-decoration: none;
-  color: inherit;
 }
 
-@media (prefers-color-scheme: dark) {
-  .badge {
-    border-color: #3a3d44;
-  }
+.badge:hover {
+  text-decoration: none;
+  filter: brightness(0.97);
 }

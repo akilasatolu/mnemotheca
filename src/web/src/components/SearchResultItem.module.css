@@ -1,33 +1,34 @@
-/* src/web/src/components/SearchResultItem.module.css — 検索結果 1 件のスタイル(設計 §11-1)。 */
+/* src/web/src/components/SearchResultItem.module.css — 検索結果 1 件のスタイル(Material Design 3)。 */
 
 .item {
   list-style: none;
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--md-outline-variant);
 }
 
 .title {
   margin: 0 0 4px;
   font-size: 1rem;
+  font-weight: 500;
 }
 
 .snippet {
   margin: 4px 0;
-  color: #444;
+  color: var(--md-on-surface-variant);
 }
 
 .snippet mark {
-  background: #fde68a;
-  color: inherit;
-  padding: 0 1px;
-  border-radius: 2px;
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  padding: 0 2px;
+  border-radius: var(--md-shape-xs);
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -35,42 +36,22 @@
 .chips li,
 .meta span {
   font-size: 0.75rem;
-  padding: 1px 6px;
-  border-radius: 10px;
-  background: #eef2ff;
-  color: #3730a3;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: var(--md-shape-sm);
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
 }
 
 .meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 6px 0 0;
+  margin: 8px 0 0;
 }
 
 .meta span[data-kind='tag'] {
-  background: #ecfeff;
-  color: #155e75;
-}
-
-@media (prefers-color-scheme: dark) {
-  .item {
-    border-color: #2a2d33;
-  }
-  .snippet {
-    color: #b8bdc7;
-  }
-  .snippet mark {
-    background: #7c5e00;
-    color: #fdf6e3;
-  }
-  .chips li,
-  .meta span {
-    background: #262b40;
-    color: #c7d2fe;
-  }
-  .meta span[data-kind='tag'] {
-    background: #123338;
-    color: #a5f3fc;
-  }
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  border: 1px solid var(--md-outline-variant);
 }

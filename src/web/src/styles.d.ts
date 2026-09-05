@@ -3,3 +3,6 @@ declare module '*.module.css' {
   const classes: Record<string, string>;
   export default classes;
 }
+
+// 副作用 import 用(グローバルなテーマ CSS)。
+declare module '*.css';

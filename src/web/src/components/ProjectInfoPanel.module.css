@@ -1,14 +1,14 @@
-/* src/web/src/components/ProjectInfoPanel.module.css — プロジェクト情報パネル(設計 §11-1: CSS Modules)。 */
+/* src/web/src/components/ProjectInfoPanel.module.css — プロジェクト情報パネル(Material Design 3)。 */
 
 .dl {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 4px 16px;
+  gap: 8px 16px;
   margin: 0;
 }
 
 .term {
-  color: #888;
+  color: var(--md-on-surface-variant);
 }
 
 .value {
@@ -17,7 +17,7 @@
 }
 
 .note {
-  color: #888;
-  font-size: 12px;
+  color: var(--md-on-surface-variant);
+  font-size: 0.75rem;
   margin-bottom: 0;
 }
