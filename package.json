@@ -1,6 +1,6 @@
 {
   "name": "mnemo",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Mnemo — local-first Markdown second-brain fed from AI chat via MCP",
   "type": "module",
   "license": "MIT",

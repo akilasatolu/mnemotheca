@@ -35,7 +35,7 @@ create your own project directory and install `mnemo` into it as a **git
 dependency**, pointed at a tag on GitHub:
 
 ```sh
-npm install github:akilasatolu/mnemotheca#v0.1.0
+npm install github:akilasatolu/mnemotheca#v0.1.2
 ```
 
 This puts the built tool at `node_modules/mnemo/` inside *your* project — the tool's
@@ -51,7 +51,7 @@ never becomes anyone's vault.
 ```sh
 mkdir ~/mnemo && cd ~/mnemo
 npm init -y
-npm install github:akilasatolu/mnemotheca#v0.1.0
+npm install github:akilasatolu/mnemotheca#v0.1.2
 npx mnemo init .
 ```
 
