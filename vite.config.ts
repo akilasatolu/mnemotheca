@@ -20,6 +20,9 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    // 既定の `host: 'localhost'` は環境によって ::1 にしか bind されないことがあり、
+    // 127.0.0.1 に明示 bind する実サーバー(boot.ts)と食い違ってアクセスできなくなる。
+    host: '127.0.0.1',
     proxy: {
       '/api': {
         target: apiTarget,
