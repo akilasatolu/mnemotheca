@@ -1,12 +1,13 @@
-/* src/web/src/routes/SettingsPage.module.css — 設定画面(設計 §11-1: CSS Modules)。 */
+/* src/web/src/routes/SettingsPage.module.css — 設定画面(Material Design 3)。 */
 
 .section {
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 .sectionTitle {
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 12px;
 }
 
 .row {
@@ -17,12 +18,12 @@
 .dl {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 4px 16px;
-  margin: 0 0 8px;
+  gap: 8px 16px;
+  margin: 0 0 12px;
 }
 
 .term {
-  color: #888;
+  color: var(--md-on-surface-variant);
 }
 
 .value {
@@ -45,12 +46,12 @@
 }
 
 .hint {
-  color: #888;
-  font-size: 12px;
+  color: var(--md-on-surface-variant);
+  font-size: 0.75rem;
 }
 
 .ok {
-  color: #2b8a3e;
+  color: var(--md-success);
 }
 
 .summary {
@@ -58,16 +59,10 @@
 }
 
 .raw {
-  background: #f6f8fa;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px;
+  background: var(--md-surface-container);
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-md);
+  padding: 16px;
   overflow-x: auto;
-}
-
-@media (prefers-color-scheme: dark) {
-  .raw {
-    background: #1e1e1e;
-    border-color: #333;
-  }
+  font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }

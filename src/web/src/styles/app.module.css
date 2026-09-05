@@ -1,17 +1,33 @@
-/* src/web/src/styles/app.module.css — SPA 骨格の共通スタイル(設計 §11-1: CSS Modules + ダークモード)。
-   各画面は自分のコンポーネント用に別 *.module.css を持つ。 */
+/* src/web/src/styles/app.module.css — SPA 骨格の共通スタイル(Material Design 3)。
+   色・角丸・影は styles/theme.css のトークンを参照する。各画面は個別の *.module.css を持つ。 */
 
 .shell {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 256px 1fr;
   min-height: 100vh;
-  color: #1a1a1a;
-  background: #fafafa;
+  background: var(--md-surface);
+  color: var(--md-on-surface);
 }
 
+/* --- Navigation drawer --- */
 .sidenav {
-  border-right: 1px solid #e0e0e0;
+  background: var(--md-surface-container-low);
+  border-right: 1px solid var(--md-outline-variant);
   padding: 16px 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px 20px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--md-on-surface);
+}
+
+.brand :global(.material-symbols-rounded) {
+  color: var(--md-primary);
 }
 
 .sidenav nav {
@@ -21,15 +37,26 @@
 }
 
 .sidenav a {
-  padding: 8px 10px;
-  border-radius: 6px;
-  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 20px;
+  border-radius: var(--md-shape-full);
+  color: var(--md-on-surface-variant);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background var(--md-motion-fast), color var(--md-motion-fast);
+}
+
+.sidenav a:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
   text-decoration: none;
 }
 
 .sidenav a[aria-current='page'] {
-  background: #e8e8e8;
-  font-weight: 600;
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
 }
 
 .main {
@@ -38,59 +65,79 @@
   min-width: 0;
 }
 
+/* --- Top app bar --- */
 .header {
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 12px 24px;
+  background: var(--md-surface);
+  border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.header form {
+  width: 100%;
 }
 
 .header input {
-  width: min(420px, 100%);
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  width: min(480px, 100%);
+  padding: 12px 16px;
+  color: var(--md-on-surface);
+  background: var(--md-surface-container-highest);
+  border: none;
+  border-radius: var(--md-shape-full);
   font: inherit;
+  transition: box-shadow var(--md-motion-fast);
+}
+
+.header input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--md-primary);
 }
 
 .content {
-  padding: 16px;
+  padding: 24px;
   flex: 1;
   min-width: 0;
 }
 
+/* --- Banners --- */
 .globalBanner {
-  padding: 10px 16px;
-  background: #fde8e8;
-  color: #8a1f1f;
-  border-bottom: 1px solid #f5c2c2;
+  padding: 14px 24px;
+  background: var(--md-error-container);
+  color: var(--md-on-error-container);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-error) 40%, transparent);
 }
 
 .globalBanner code {
-  background: rgba(0, 0, 0, 0.08);
-  padding: 1px 4px;
-  border-radius: 3px;
+  background: color-mix(in srgb, var(--md-on-error-container) 12%, transparent);
+  padding: 1px 6px;
+  border-radius: var(--md-shape-xs);
 }
 
 .issuesBanner {
   margin: 0;
-  padding: 10px 16px;
-  background: #fff7e6;
-  color: #7a5200;
-  border-bottom: 1px solid #f0dcae;
+  padding: 14px 24px;
+  background: var(--md-warning-container);
+  color: var(--md-on-warning-container);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-warning) 40%, transparent);
 }
 
 .issuesBanner ul {
-  margin: 0;
-  padding-left: 18px;
+  margin: 4px 0 0;
+  padding-left: 20px;
 }
 
+/* --- Spinner (circular progress) --- */
 .spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
 }
 
 @keyframes spin {
@@ -99,122 +146,138 @@
   }
 }
 
+/* --- Card (elevated / outlined hybrid) --- */
 .card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-md);
   padding: 16px;
-  background: #fff;
+  background: var(--md-surface-container-low);
 }
 
+/* --- Button (filled / text) --- */
 .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 24px;
   font: inherit;
-  padding: 6px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fff;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  color: var(--md-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--md-shape-full);
   cursor: pointer;
+  transition: background var(--md-motion-fast), box-shadow var(--md-motion-fast);
+}
+
+.button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--md-primary) 8%, transparent);
 }
 
 .button[data-variant='primary'] {
-  background: #2563eb;
-  border-color: #2563eb;
-  color: #fff;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.button[data-variant='primary']:hover:not(:disabled) {
+  background: var(--md-primary);
+  box-shadow: var(--md-elevation-1);
 }
 
 .button:disabled {
-  opacity: 0.5;
+  opacity: 0.38;
   cursor: not-allowed;
 }
 
 .state {
-  padding: 32px 16px;
+  padding: 48px 16px;
   text-align: center;
-  color: #666;
+  color: var(--md-on-surface-variant);
 }
 
+/* --- Dialog --- */
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: color-mix(in srgb, #000 40%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .modal {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+  border-radius: var(--md-shape-xl);
+  padding: 24px;
   max-width: 480px;
   width: 90%;
+  box-shadow: var(--md-elevation-3);
 }
 
+.modal h2 {
+  margin-top: 0;
+}
+
+/* --- Snackbar --- */
 .toaster {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  z-index: 50;
+  z-index: 200;
 }
 
 .toast {
-  background: #333;
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 6px;
+  background: var(--md-surface-container-highest);
+  color: var(--md-on-surface);
+  padding: 14px 16px;
+  border-radius: var(--md-shape-xs);
+  box-shadow: var(--md-elevation-3);
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
+  min-width: 320px;
+  max-width: 560px;
 }
 
 .toast[data-kind='error'] {
-  background: #b91c1c;
+  background: var(--md-error-container);
+  color: var(--md-on-error-container);
 }
 
 .toast[data-kind='success'] {
-  background: #15803d;
+  background: var(--md-success-container);
+  color: var(--md-on-surface);
 }
 
 .toast button {
+  margin-left: auto;
   background: none;
   border: none;
-  color: inherit;
+  color: var(--md-primary);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1;
+  padding: 4px;
+  border-radius: var(--md-shape-full);
 }
 
-@media (prefers-color-scheme: dark) {
+.toast button:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+@media (max-width: 768px) {
   .shell {
-    color: #e6e6e6;
-    background: #16181c;
+    grid-template-columns: 1fr;
   }
-  .sidenav,
-  .header {
-    border-color: #2a2d33;
-  }
-  .sidenav a[aria-current='page'] {
-    background: #2a2d33;
-  }
-  .card {
-    background: #1d2026;
-    border-color: #2a2d33;
-  }
-  .button {
-    background: #1d2026;
-    border-color: #3a3d44;
-    color: inherit;
-  }
-  .globalBanner {
-    background: #3b1d1d;
-    color: #f5b5b5;
-    border-color: #5a2a2a;
-  }
-  .issuesBanner {
-    background: #332b16;
-    color: #e8cf9a;
-    border-color: #4d4022;
+  .sidenav {
+    display: none;
   }
 }

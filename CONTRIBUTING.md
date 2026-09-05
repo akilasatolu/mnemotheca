@@ -92,6 +92,41 @@ npx mnemo start
 and fast — good for the normal edit/rebuild/retest loop. Rebuild
 (`npm run build`) after each change and reinstall/relink to pick it up.
 
+### Web UI with hot reload
+
+Editing `src/web` through the loop above means a full `npm run build` for
+every change. For fast iteration on the SPA itself, run the real API server
+(through the `mnemo` you installed with `file:...` above — not
+`node dist/server/boot.js` directly, see note below) against the throwaway
+test project in one terminal, then Vite's dev server in another:
+
+```sh
+cd /tmp/mnemo-manual-test
+npx mnemo start   # terminal 1 — opens/prints http://127.0.0.1:<port>/?t=<token>
+
+cd /path/to/your/mnemotheca/checkout
+MNEMO_PROJECT=/tmp/mnemo-manual-test npm run dev   # terminal 2 — HMR at http://127.0.0.1:5173
+```
+
+`npm run dev` proxies `/api/*` to `http://127.0.0.1:7777` (`vite.config.ts`'s
+default; set `MNEMO_DEV_API_PORT` if `mnemo start` picked a different port
+because 7777 was taken). With `MNEMO_PROJECT` set, `vite.config.ts` reads the
+running server's token straight out of its `run.json` (same rule as
+`runtimeBase()`/`runtimePaths()` in `src/core/paths.ts`) and stamps every
+proxied request with `Authorization: Bearer <token>` — just open
+`http://127.0.0.1:5173` with no `?t=` needed. Editing anything under
+`src/web` hot-reloads against the same live vault data.
+
+If `MNEMO_PROJECT` is unset, or `run.json` can't be found (server not
+started yet, or a different `MNEMO_RUNTIME_DIR`), `npm run dev` logs a
+warning and falls back to no auth — in that case append the `?t=<token>`
+`mnemo start` printed to the Vite URL by hand. Note that this fallback needs
+a token that was actually printed somewhere, which is why the example above
+uses `mnemo start` rather than running `node dist/server/boot.js` directly —
+the latter writes the same `run.json` (so the auto-injection above works
+with it too) but its own console output never shows the token, so it's
+useless once you're stuck without `MNEMO_PROJECT`.
+
 ### Final check before tagging a release — install from GitHub
 
 Before cutting a release tag, also verify the *actual* install path end users

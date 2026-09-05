@@ -1,8 +1,9 @@
-/* src/web/src/routes/NoteViewPage.module.css — Markdown 閲覧画面のスタイル(設計 §11-1 CSS Modules)。
-   decision-log #83: P3 各画面は co-located *.module.css を作ってよい。 */
+/* src/web/src/routes/NoteViewPage.module.css — Markdown 閲覧画面のスタイル(Material Design 3)。 */
 
 .header {
   margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--md-outline-variant);
 }
 
 .header h1 {
@@ -13,12 +14,12 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin: 0.25rem 0;
+  margin: 0.5rem 0;
 }
 
 .meta {
-  color: #666;
-  font-size: 0.85rem;
+  color: var(--md-on-surface-variant);
+  font-size: 0.8125rem;
   margin: 0.5rem 0;
 }
 
@@ -30,13 +31,13 @@
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
-  margin-top: 0.75rem;
+  margin-top: 1rem;
 }
 
 .brokenPre {
   white-space: pre-wrap;
   overflow-x: auto;
-  background: #f6f6f6;
-  padding: 0.75rem;
-  border-radius: 4px;
+  background: var(--md-surface-container);
+  padding: 1rem;
+  border-radius: var(--md-shape-md);
 }

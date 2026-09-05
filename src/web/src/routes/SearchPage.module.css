@@ -1,65 +1,60 @@
-/* src/web/src/routes/SearchPage.module.css — SearchPage 専用スタイル(設計 §11-1)。 */
+/* src/web/src/routes/SearchPage.module.css — SearchPage 専用スタイル(Material Design 3)。 */
 
 .page {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   max-width: 760px;
 }
 
 .note {
   margin: 0;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--md-on-surface-variant);
 }
 
 .message {
   margin: 8px 0;
-  color: #555;
+  color: var(--md-on-surface-variant);
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .filters button {
   font: inherit;
-  font-size: 0.8rem;
-  padding: 3px 10px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  background: #fff;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-sm);
+  background: transparent;
+  color: var(--md-on-surface-variant);
   cursor: pointer;
+  transition: background var(--md-motion-fast), color var(--md-motion-fast);
+}
+
+.filters button:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
 }
 
 .filters button[aria-pressed='true'] {
-  background: #2563eb;
-  border-color: #2563eb;
-  color: #fff;
+  background: var(--md-secondary-container);
+  border-color: transparent;
+  color: var(--md-on-secondary-container);
 }
 
 .count {
   margin: 4px 0;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--md-on-surface-variant);
 }
 
 .list {
   margin: 0;
   padding: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .note,
-  .message,
-  .count {
-    color: #b8bdc7;
-  }
-  .filters button {
-    background: #1d2026;
-    border-color: #3a3d44;
-    color: inherit;
-  }
 }

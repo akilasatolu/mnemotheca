@@ -6,7 +6,7 @@
 //   - `headings`(rendered レスポンス)から TOC を生成し、スクロールスパイで現在位置を強調。
 //   - `query`(`?q=`)があれば本文テキストノードを走査して `<mark class="q-hl">` で強調。
 //   - 本文中の相対 `.md` リンクのクリックを横取りし、同ディレクトリ基準でノートを解決 → SPA 遷移。
-//     外部リンク(`http(s)://`)・`#` アンカー・`obsidian://` はそのまま素通し。
+//     外部リンク(`http(s)://`)・`#` アンカー・その他スキーム付きリンクはそのまま素通し。
 //
 // 規約: React 19 / strict / verbatimModuleSyntax。スタイルは touches の制約上ここではインライン。
 
@@ -42,7 +42,7 @@ export function resolveRelativePath(href: string, currentNotePath: string): stri
   const cut = href.search(/[?#]/);
   const pathPart = cut === -1 ? href : href.slice(0, cut);
   if (pathPart === '' || !pathPart.toLowerCase().endsWith('.md')) return null;
-  if (/^[a-z][a-z0-9+.-]*:/i.test(pathPart)) return null; // http:, obsidian:, mailto: 等
+  if (/^[a-z][a-z0-9+.-]*:/i.test(pathPart)) return null; // http:, mailto: 等スキーム付き
   if (pathPart.startsWith('/')) return null; // ルート絶対はノート相対解決の対象外
 
   const lastSlash = currentNotePath.lastIndexOf('/');
@@ -127,7 +127,7 @@ export function MarkdownView({
       if (anchor === null || anchor === undefined) return;
       const href = anchor.getAttribute('href') ?? '';
       const targetPath = resolveRelativePath(href, notePath);
-      if (targetPath === null) return; // 外部 / アンカー / obsidian:// はそのまま
+      if (targetPath === null) return; // 外部 / アンカー / スキーム付きはそのまま
       ev.preventDefault();
       const noteId = resolveMdLink(targetPath);
       if (noteId !== null) onNavigateToNote(noteId);

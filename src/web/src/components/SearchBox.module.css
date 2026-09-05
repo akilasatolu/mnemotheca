@@ -1,22 +1,23 @@
-/* src/web/src/components/SearchBox.module.css — SearchBox 専用スタイル(設計 §11-1: CSS Modules)。 */
+/* src/web/src/components/SearchBox.module.css — SearchBox 専用スタイル(Material Design 3: filled text field)。 */
 
 .input {
   width: min(560px, 100%);
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 12px 16px;
+  color: var(--md-on-surface);
+  background: var(--md-surface-container-highest);
+  border: none;
+  border-bottom: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-xs) var(--md-shape-xs) 0 0;
   font: inherit;
+  transition: background var(--md-motion-fast), border-color var(--md-motion-fast);
+}
+
+.input:hover {
+  background: var(--md-surface-container-high);
 }
 
 .input:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 1px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .input {
-    background: #1d2026;
-    border-color: #3a3d44;
-    color: #e6e6e6;
-  }
+  outline: none;
+  border-bottom: 2px solid var(--md-primary);
+  padding-bottom: 11px;
 }

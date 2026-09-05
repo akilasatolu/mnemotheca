@@ -10,10 +10,10 @@ import { Toaster } from '../context/ToastContext.js';
 import { useServerEvents } from '../hooks/useServerEvents.js';
 
 const NAV = [
-  { to: '/', label: '一覧', end: true },
-  { to: '/search', label: '検索', end: false },
-  { to: '/dashboard', label: 'ダッシュボード', end: false },
-  { to: '/settings', label: '設定', end: false },
+  { to: '/', label: '一覧', icon: 'list', end: true },
+  { to: '/search', label: '検索', icon: 'search', end: false },
+  { to: '/dashboard', label: 'ダッシュボード', icon: 'analytics', end: false },
+  { to: '/settings', label: '設定', icon: 'settings', end: false },
 ] as const;
 
 export function AppShell(): ReactElement {
@@ -37,9 +37,18 @@ export function AppShell(): ReactElement {
   return (
     <div className={styles.shell}>
       <aside className={styles.sidenav}>
+        <div className={styles.brand}>
+          <span className="material-symbols-rounded" aria-hidden="true">
+            book_2
+          </span>
+          Mnemotheca
+        </div>
         <nav aria-label="メインナビゲーション">
           {NAV.map((n) => (
             <NavLink key={n.to} to={n.to} end={n.end}>
+              <span className="material-symbols-rounded" aria-hidden="true">
+                {n.icon}
+              </span>
               {n.label}
             </NavLink>
           ))}

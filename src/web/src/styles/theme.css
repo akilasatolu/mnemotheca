@@ -1,0 +1,200 @@
+/* src/web/src/styles/theme.css — Google Material Design 3 のデザイントークンと素の要素スタイル。
+   各 *.module.css はここで定義した CSS カスタムプロパティを参照する(ハードコード色を置かない)。 */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- M3 color roles (light / blue) --- */
+  --md-primary: #0b57d0;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #d3e3fd;
+  --md-on-primary-container: #041e49;
+
+  --md-secondary: #3c5a8c;
+  --md-secondary-container: #dae2f9;
+  --md-on-secondary-container: #131c2b;
+
+  --md-tertiary: #146c4e;
+  --md-tertiary-container: #a6f2cf;
+
+  --md-surface: #fbfcff;
+  --md-surface-dim: #d9dae0;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #f2f4fa;
+  --md-surface-container: #eceef4;
+  --md-surface-container-high: #e6e8ee;
+  --md-surface-container-highest: #e0e3e9;
+
+  --md-on-surface: #1a1c1e;
+  --md-on-surface-variant: #43474e;
+  --md-outline: #73777f;
+  --md-outline-variant: #c3c7cf;
+
+  --md-error: #ba1a1a;
+  --md-on-error: #ffffff;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #410002;
+
+  --md-warning: #7a5900;
+  --md-warning-container: #ffdf9e;
+  --md-on-warning-container: #261a00;
+
+  --md-success: #256a41;
+  --md-success-container: #aaf2bd;
+
+  /* --- shape --- */
+  --md-shape-xs: 4px;
+  --md-shape-sm: 8px;
+  --md-shape-md: 12px;
+  --md-shape-lg: 16px;
+  --md-shape-xl: 28px;
+  --md-shape-full: 999px;
+
+  /* --- elevation (M3 tonal shadows) --- */
+  --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* --- motion --- */
+  --md-motion-fast: 150ms cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-standard: 250ms cubic-bezier(0.2, 0, 0, 1);
+
+  --md-state-hover: 0.08;
+  --md-state-focus: 0.12;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-primary: #a8c7fa;
+    --md-on-primary: #062e6f;
+    --md-primary-container: #0842a0;
+    --md-on-primary-container: #d3e3fd;
+
+    --md-secondary: #bec6dc;
+    --md-secondary-container: #3a4a63;
+    --md-on-secondary-container: #dae2f9;
+
+    --md-tertiary: #8bd6b3;
+    --md-tertiary-container: #005138;
+
+    --md-surface: #111318;
+    --md-surface-dim: #111318;
+    --md-surface-container-lowest: #0c0e13;
+    --md-surface-container-low: #191c20;
+    --md-surface-container: #1d2024;
+    --md-surface-container-high: #282a2f;
+    --md-surface-container-highest: #33353a;
+
+    --md-on-surface: #e2e2e6;
+    --md-on-surface-variant: #c3c7cf;
+    --md-outline: #8d9199;
+    --md-outline-variant: #43474e;
+
+    --md-error: #ffb4ab;
+    --md-on-error: #690005;
+    --md-error-container: #93000a;
+    --md-on-error-container: #ffdad6;
+
+    --md-warning: #f2c15c;
+    --md-warning-container: #5c4300;
+    --md-on-warning-container: #ffdf9e;
+
+    --md-success: #8fd5a6;
+    --md-success-container: #0c5132;
+
+    --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+    --md-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+    --md-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--md-on-surface);
+  background: var(--md-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+h2 {
+  font-size: 1.375rem;
+  font-weight: 400;
+}
+h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+a {
+  color: var(--md-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* text field (filled) の共通見た目 */
+.md-field {
+  width: min(560px, 100%);
+  padding: 12px 16px;
+  font: inherit;
+  color: var(--md-on-surface);
+  background: var(--md-surface-container-highest);
+  border: none;
+  border-bottom: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-xs) var(--md-shape-xs) 0 0;
+  transition: background var(--md-motion-fast), border-color var(--md-motion-fast);
+}
+.md-field:hover {
+  background: var(--md-surface-container-high);
+}
+.md-field:focus-visible {
+  outline: none;
+  border-bottom: 2px solid var(--md-primary);
+  padding-bottom: 11px;
+}

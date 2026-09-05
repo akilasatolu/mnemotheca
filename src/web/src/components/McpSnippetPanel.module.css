@@ -1,23 +1,31 @@
-/* src/web/src/components/McpSnippetPanel.module.css — MCP 連携スニペットパネル(設計 §11-1: CSS Modules)。 */
+/* src/web/src/components/McpSnippetPanel.module.css — MCP 連携スニペットパネル(Material Design 3)。 */
 
 .tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .tab {
   font: inherit;
+  font-weight: 500;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid #d0d0d0;
-  background: #fff;
+  padding: 8px 16px;
+  border-radius: var(--md-shape-full);
+  border: 1px solid var(--md-outline);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  transition: background var(--md-motion-fast), color var(--md-motion-fast);
+}
+
+.tab:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
 }
 
 .tab[aria-selected='true'] {
-  background: #e7f0ff;
-  border-color: #4c6ef5;
+  background: var(--md-secondary-container);
+  border-color: transparent;
+  color: var(--md-on-secondary-container);
 }
 
 .dl {
@@ -27,7 +35,7 @@
 }
 
 .term {
-  color: #888;
+  color: var(--md-on-surface-variant);
 }
 
 .value {
@@ -35,12 +43,13 @@
 }
 
 .snippet {
-  background: #f6f8fa;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px;
+  background: var(--md-surface-container);
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-md);
+  padding: 16px;
   overflow-x: auto;
   white-space: pre;
+  font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .copyRow {
@@ -50,17 +59,6 @@
 }
 
 .note {
-  color: #888;
-  font-size: 12px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .tab {
-    background: #1e1e1e;
-    border-color: #333;
-  }
-  .snippet {
-    background: #1e1e1e;
-    border-color: #333;
-  }
+  color: var(--md-on-surface-variant);
+  font-size: 0.75rem;
 }

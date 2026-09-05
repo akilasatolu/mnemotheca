@@ -123,7 +123,7 @@ export interface RenderedNote {
   html: string;
   frontmatter: Record<string, unknown>;
   headings: Heading[];
-  /** vault ルート相対パス(`knowledge/<...>/<slug>.md`)。相対リンク解決 / Obsidian 導線に使う。 */
+  /** vault ルート相対パス(`knowledge/<...>/<slug>.md`)。相対リンク解決 / パス表示に使う。 */
   path: string;
 }
 

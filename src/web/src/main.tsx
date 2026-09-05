@@ -5,6 +5,8 @@
 // 画面コンポーネント(CategoryListPage 等)は各 `routes/*.tsx` に実装されている
 // (各ファイルは default export を維持していれば main.tsx の変更は不要)。
 
+import './styles/theme.css';
+import './styles/markdown.css';
 import { StrictMode, type ReactElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';

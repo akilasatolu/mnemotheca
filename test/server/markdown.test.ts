@@ -92,10 +92,10 @@ describe('render — リンクのスキームと属性 (§13-13b)', () => {
     __resetHighlighterCache();
   });
 
-  it('obsidian:// リンクは href を保持し target を付けない', async () => {
+  it('未許可スキーム(obsidian://)のリンクは href が除去される', async () => {
     const { html } = await render('[開く](obsidian://open?vault=v&file=x)\n');
-    expect(html).toContain('href="obsidian://open?vault=v&amp;file=x"');
-    expect(html).not.toContain('target=');
+    expect(html).not.toContain('obsidian://');
+    expect(html).toContain('開く');
   });
 
   it('外部 https リンクには target=_blank と rel が付く', async () => {
