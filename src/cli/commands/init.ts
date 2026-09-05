@@ -121,9 +121,18 @@ function serializeJson(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
 
-function isNonEmptyDir(dir: string): boolean {
+const INSTALL_SCAFFOLD_ENTRIES: ReadonlySet<string> = new Set([
+  'package.json',
+  'package-lock.json',
+  'npm-shrinkwrap.json',
+  'node_modules',
+  '.gitignore',
+  '.git',
+]);
+
+function hasPreexistingContent(dir: string): boolean {
   try {
-    return fs.readdirSync(dir).length > 0;
+    return fs.readdirSync(dir).some((name) => !INSTALL_SCAFFOLD_ENTRIES.has(name));
   } catch {
     return false;
   }
@@ -238,7 +247,7 @@ export async function run(ctx: CliCommandContext, deps: InitDeps = {}): Promise<
     );
   }
 
-  if (existedBefore && !idempotent && isNonEmptyDir(projectRoot)) {
+  if (existedBefore && !idempotent && hasPreexistingContent(projectRoot)) {
     const ok = await prompts.confirmUseExistingDir(projectRoot);
     if (!ok) {
       throw new MnemoError('NOT_INITIALIZED', '初期化をキャンセルしました', { projectRoot });
