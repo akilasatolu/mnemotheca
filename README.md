@@ -253,22 +253,40 @@ whole `vault/`.
 
 ## Updating
 
-Bump the `#<ref>` in your project's `package.json` (`dependencies.mnemo`) to the new
-tag, then reinstall:
+> [!IMPORTANT]
+> **Editing `package.json` and running plain `npm install` does *not* upgrade `mnemo`.**
+> `mnemo` is a git dependency, and `package-lock.json` pins it to a specific
+> commit. `npm install` sees that pin as already satisfied and keeps the old
+> commit — even after you change the `#<ref>`. You must reinstall with an
+> explicit spec so npm re-resolves the tag.
 
-```json
-{
-  "dependencies": {
-    "mnemo": "github:akilasatolu/mnemotheca#v0.2.0"
-  }
-}
-```
+Run this from your project directory (replace `v0.2.0` with the tag you want):
 
 ```sh
-npm install
+npm install "mnemo@github:akilasatolu/mnemotheca#v0.2.0" --save
 ```
 
-Your `vault/` and `.mnemotheca/config.json` are untouched by this — only
+This updates `dependencies.mnemo` in `package.json` **and** rewrites the pinned
+commit in `package-lock.json`.
+
+Then verify the new version is actually installed:
+
+```sh
+node -p "require('./node_modules/mnemo/package.json').version"
+```
+
+If it still shows the old version, force a clean fetch:
+
+```sh
+rm -rf node_modules/mnemo
+npm install "mnemo@github:akilasatolu/mnemotheca#v0.2.0" --save
+```
+
+Finally, **fully restart your AI client** (quit and reopen — not just a window
+reload) so it relaunches the MCP server process with the new code. The local Web
+UI server is re-spawned automatically on the next `mnemo_show` / `mnemo start`.
+
+Your `vault/` and `.mnemotheca/config.json` are untouched by any of this — only
 `node_modules/mnemo/` changes.
 
 ---
@@ -293,6 +311,12 @@ mnemo doctor --json   # machine-readable
 `doctor` never touches your AI client's config, never runs `npm install`, and never
 auto-recovers an interrupted `organize` — it reports those and tells you the command
 to run.
+
+**MCP tools started failing right after I bumped the version** (e.g.
+`RUNTIME_DIR_UNWRITABLE`, or behaviour that matches an old release): you almost
+certainly still have the *old* build installed. Plain `npm install` does not
+re-resolve a git dependency — follow [Updating](#updating) and verify the
+installed version.
 
 ---
 
