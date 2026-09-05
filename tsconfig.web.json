@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": [],
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "declaration": false,
+    "sourceMap": false,
+    "rootDir": "."
+  },
+  "include": ["src/web", "test/web"],
+  "exclude": ["node_modules", "dist"]
+}

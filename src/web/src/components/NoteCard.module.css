@@ -1,0 +1,44 @@
+/* NoteCard — 一覧の 1 ノート行(設計 §11-1 CSS Modules)。 */
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+
+.title {
+  margin: 0 0 4px;
+}
+
+.title a {
+  color: inherit;
+}
+
+.summary {
+  margin: 0 0 6px;
+  color: #666;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.date {
+  margin-left: auto;
+  font-size: 12px;
+  color: #999;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: #1d2026;
+    border-color: #2a2d33;
+  }
+  .summary {
+    color: #a0a0a0;
+  }
+}

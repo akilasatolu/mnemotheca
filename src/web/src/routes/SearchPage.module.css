@@ -1,0 +1,65 @@
+/* src/web/src/routes/SearchPage.module.css — SearchPage 専用スタイル(設計 §11-1)。 */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 760px;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.message {
+  margin: 8px 0;
+  color: #555;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filters button {
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.filters button[aria-pressed='true'] {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.count {
+  margin: 4px 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .note,
+  .message,
+  .count {
+    color: #b8bdc7;
+  }
+  .filters button {
+    background: #1d2026;
+    border-color: #3a3d44;
+    color: inherit;
+  }
+}

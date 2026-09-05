@@ -1,0 +1,48 @@
+/* src/web/src/components/UsageCharts.module.css — 利用状況グラフ群のスタイル(設計 §11-1: CSS Modules)。 */
+
+.root {
+  display: grid;
+  gap: 24px;
+}
+
+.section {
+  margin: 0;
+}
+
+.heading {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+.cards {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 160px;
+}
+
+.cardLabel {
+  color: #888;
+  font-size: 12px;
+}
+
+.figure {
+  margin: 0;
+}
+
+.figcaption {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    border-color: #333;
+  }
+}

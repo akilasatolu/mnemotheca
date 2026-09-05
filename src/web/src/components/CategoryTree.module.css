@@ -1,0 +1,59 @@
+/* CategoryTree — 左ペインのカテゴリツリー(設計 §11-1 CSS Modules)。 */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.toggle {
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 18px;
+  font: inherit;
+  color: inherit;
+}
+
+.spacer {
+  display: inline-block;
+  width: 18px;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.node[data-selected='true'] {
+  background: #e8e8e8;
+  font-weight: 600;
+}
+
+.badge {
+  margin-left: auto;
+  font-size: 12px;
+  color: #888;
+  min-width: 16px;
+  text-align: right;
+}
+
+@media (prefers-color-scheme: dark) {
+  .node[data-selected='true'] {
+    background: #2a2d33;
+  }
+}

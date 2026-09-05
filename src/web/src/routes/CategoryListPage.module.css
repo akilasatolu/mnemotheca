@@ -1,0 +1,49 @@
+/* CategoryListPage — カテゴリ別ノート一覧(設計 §11-1 CSS Modules)。 */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+}
+
+.tree {
+  border-right: 1px solid #e0e0e0;
+  padding-right: 12px;
+  min-width: 0;
+}
+
+.treeStatus {
+  color: #888;
+}
+
+.main {
+  min-width: 0;
+}
+
+.tagFilter {
+  margin-top: 0;
+}
+
+.clearBtn {
+  font: inherit;
+  cursor: pointer;
+}
+
+.skeleton {
+  display: grid;
+  gap: 8px;
+}
+
+.skeletonRow {
+  height: 84px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eee, #f5f5f5, #eee);
+}
+
+@media (prefers-color-scheme: dark) {
+  .tree {
+    border-color: #2a2d33;
+  }
+  .skeletonRow {
+    background: linear-gradient(90deg, #23262d, #2a2d33, #23262d);
+  }
+}

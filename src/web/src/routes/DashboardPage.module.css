@@ -1,0 +1,32 @@
+/* src/web/src/routes/DashboardPage.module.css — 利用状況ダッシュボード(設計 §11-1: CSS Modules)。 */
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filterButton {
+  font: inherit;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+}
+
+.filterButton[aria-pressed='true'] {
+  background: #e7f0ff;
+  border-color: #4c6ef5;
+}
+
+.skipped {
+  color: #b3541e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .filterButton {
+    background: #1e1e1e;
+    border-color: #333;
+  }
+}

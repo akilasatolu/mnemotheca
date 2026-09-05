@@ -1,0 +1,16 @@
+/* CategoryBadge — カテゴリ経路バッジ(設計 §11-1 CSS Modules)。 */
+.badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+  .badge {
+    border-color: #3a3d44;
+  }
+}

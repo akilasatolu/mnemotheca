@@ -1,0 +1,220 @@
+/* src/web/src/styles/app.module.css — SPA 骨格の共通スタイル(設計 §11-1: CSS Modules + ダークモード)。
+   各画面は自分のコンポーネント用に別 *.module.css を持つ。 */
+
+.shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+.sidenav {
+  border-right: 1px solid #e0e0e0;
+  padding: 16px 12px;
+}
+
+.sidenav nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidenav a {
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidenav a[aria-current='page'] {
+  background: #e8e8e8;
+  font-weight: 600;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 16px;
+}
+
+.header input {
+  width: min(420px, 100%);
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.content {
+  padding: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.globalBanner {
+  padding: 10px 16px;
+  background: #fde8e8;
+  color: #8a1f1f;
+  border-bottom: 1px solid #f5c2c2;
+}
+
+.globalBanner code {
+  background: rgba(0, 0, 0, 0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.issuesBanner {
+  margin: 0;
+  padding: 10px 16px;
+  background: #fff7e6;
+  color: #7a5200;
+  border-bottom: 1px solid #f0dcae;
+}
+
+.issuesBanner ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+}
+
+.button {
+  font: inherit;
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.button[data-variant='primary'] {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.state {
+  padding: 32px 16px;
+  text-align: center;
+  color: #666;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 480px;
+  width: 90%;
+}
+
+.toaster {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+}
+
+.toast {
+  background: #333;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.toast[data-kind='error'] {
+  background: #b91c1c;
+}
+
+.toast[data-kind='success'] {
+  background: #15803d;
+}
+
+.toast button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .shell {
+    color: #e6e6e6;
+    background: #16181c;
+  }
+  .sidenav,
+  .header {
+    border-color: #2a2d33;
+  }
+  .sidenav a[aria-current='page'] {
+    background: #2a2d33;
+  }
+  .card {
+    background: #1d2026;
+    border-color: #2a2d33;
+  }
+  .button {
+    background: #1d2026;
+    border-color: #3a3d44;
+    color: inherit;
+  }
+  .globalBanner {
+    background: #3b1d1d;
+    color: #f5b5b5;
+    border-color: #5a2a2a;
+  }
+  .issuesBanner {
+    background: #332b16;
+    color: #e8cf9a;
+    border-color: #4d4022;
+  }
+}

@@ -1,0 +1,22 @@
+/* src/web/src/components/SearchBox.module.css — SearchBox 専用スタイル(設計 §11-1: CSS Modules)。 */
+
+.input {
+  width: min(560px, 100%);
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.input:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .input {
+    background: #1d2026;
+    border-color: #3a3d44;
+    color: #e6e6e6;
+  }
+}

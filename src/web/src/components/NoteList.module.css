@@ -1,0 +1,39 @@
+/* NoteList — 右ペインのノート一覧(設計 §11-1 CSS Modules)。 */
+.root {
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.orderBtn {
+  font: inherit;
+  cursor: pointer;
+}
+
+.count {
+  margin-left: auto;
+  color: #888;
+  font-size: 13px;
+}
+
+.scroll {
+  height: 70vh;
+  overflow: auto;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+}
+
+.rowWrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}

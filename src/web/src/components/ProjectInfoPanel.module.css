@@ -1,0 +1,23 @@
+/* src/web/src/components/ProjectInfoPanel.module.css — プロジェクト情報パネル(設計 §11-1: CSS Modules)。 */
+
+.dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 0;
+}
+
+.term {
+  color: #888;
+}
+
+.value {
+  margin: 0;
+  word-break: break-all;
+}
+
+.note {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 0;
+}

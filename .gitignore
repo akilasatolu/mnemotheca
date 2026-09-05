@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build output (rebuilt by `npm run build` / `prepare`)
+dist/
+*.tsbuildinfo
+
+# test / coverage
+coverage/
+.vitest/
+
+# editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# logs
+*.log
+npm-debug.log*
