@@ -92,6 +92,27 @@ npx mnemo start
 and fast — good for the normal edit/rebuild/retest loop. Rebuild
 (`npm run build`) after each change and reinstall/relink to pick it up.
 
+### Web UI with hot reload
+
+Editing `src/web` through the loop above means a full `npm run build` for
+every change. For fast iteration on the SPA itself, run the real API server
+against a throwaway test project in one terminal, then Vite's dev server in
+another:
+
+```sh
+npm run build      # once, so dist/server/boot.js exists
+MNEMO_PROJECT=/tmp/mnemo-manual-test node dist/server/boot.js   # terminal 1 — prints the port + a token URL
+
+npm run dev                                                     # terminal 2 — Vite dev server with HMR
+```
+
+`npm run dev` proxies `/api/*` to `http://127.0.0.1:7777` (`vite.config.ts`'s
+default; set `MNEMO_DEV_API_PORT` if `boot.js` picked a different port
+because 7777 was taken). Open the URL Vite prints and append the `?t=<token>`
+query string from the `boot.js` output once — `AuthContext` moves the token
+into `sessionStorage` and strips it from the URL on first load. From then on,
+editing anything under `src/web` hot-reloads against the same live vault data.
+
 ### Final check before tagging a release — install from GitHub
 
 Before cutting a release tag, also verify the *actual* install path end users

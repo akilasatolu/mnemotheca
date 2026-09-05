@@ -16,6 +16,7 @@
   "scripts": {
     "prepare": "tsc -p tsconfig.json && vite build",
     "build": "npm run prepare",
+    "dev": "vite",
     "test": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.web.json && tsc -p tsconfig.test.json"
   },
