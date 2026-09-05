@@ -3,11 +3,15 @@
 // projectRoot を解決済み(`cli/index.ts` の `NEEDS_PROJECT`)の状態で呼ばれる。
 // `server/boot.ts` の `startServer({ projectRoot, detached: false })` を **同一プロセス**で
 // 実行し、stdout に URL を出し、既定ブラウザを開く(`--no-open` で抑止)。
-// Ctrl+C(SIGINT)/ SIGTERM で `started.stop()`(watcher close + server close + run.json 削除)
-// を実行して graceful 終了する。
+// Ctrl+C(SIGINT)/ SIGTERM / SIGHUP(ターミナルを閉じた)で `started.stop()`
+// (watcher close + server close + run.json 削除)を実行して graceful 終了する。
+// さらに `process.on('exit')` で run.json の同期クリーンアップを行い、想定外終了でも
+// 死んだ pid を指す run.json を残さない(§12-5 / §12-6)。
 //
 // テスト容易性のため `startServer` / ブラウザ起動 / シグナル待受はすべて `StartDeps` で
 // 注入できる(既定は本物)。実 listen・実ブラウザ起動はテストでは行わない。
+
+import fs from 'node:fs';
 
 import openBrowser from 'open';
 
@@ -36,15 +40,16 @@ export interface StartDeps {
   write: (line: string) => void;
 }
 
+/** graceful shutdown を促すシグナル。SIGHUP = 起動元ターミナルが閉じられたケース。 */
+const SHUTDOWN_SIGNALS: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGHUP'];
+
 function defaultWaitForShutdown(): Promise<NodeJS.Signals> {
   return new Promise((resolve) => {
     const onSignal = (sig: NodeJS.Signals): void => {
-      process.off('SIGINT', onSignal);
-      process.off('SIGTERM', onSignal);
+      for (const s of SHUTDOWN_SIGNALS) process.off(s, onSignal);
       resolve(sig);
     };
-    process.once('SIGINT', onSignal);
-    process.once('SIGTERM', onSignal);
+    for (const s of SHUTDOWN_SIGNALS) process.once(s, onSignal);
   });
 }
 
@@ -92,6 +97,20 @@ export async function run(
     detached: false,
     ...(port !== undefined ? { port } : {}),
   });
+
+  // 想定外終了(uncaughtException / SIGHUP すり抜け 等)でも run.json を残さない最後の砦。
+  // run.json の pid が自分のときだけ消す(§12-5 / §12-6)。
+  const runJsonPath = started.runJsonPath;
+  if (runJsonPath) {
+    process.on('exit', () => {
+      try {
+        const cur = JSON.parse(fs.readFileSync(runJsonPath, 'utf8')) as { pid?: unknown };
+        if (cur.pid === process.pid) fs.unlinkSync(runJsonPath);
+      } catch {
+        /* 既に無い / 読めない / 消せない → 無視 */
+      }
+    });
+  }
 
   const tokenUrl = `http://127.0.0.1:${started.port}/?t=${started.token}`;
   const bareUrl = `http://127.0.0.1:${started.port}`;

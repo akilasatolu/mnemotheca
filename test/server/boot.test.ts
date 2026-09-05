@@ -88,6 +88,7 @@ function makeDeps(over: Partial<BootDeps> = {}): {
     ensureRuntimeDir: realEnsureRuntimeDir,
     isPortFree: vi.fn(async () => true),
     probeHealthz: vi.fn(async () => false),
+    probeHealthzStartedAt: vi.fn(async () => null),
     isPidAlive: vi.fn(() => true),
     now: () => new Date('2026-09-03T00:00:00.000Z'),
     pid: 424242,
@@ -348,32 +349,52 @@ describe('selfCheckTick — 一時領域クリア耐性 N-4(§12-6 / §13-12)', 
     expect(h.exit).not.toHaveBeenCalled();
   });
 
-  it('run.json の pid を別値に書き換え → 自プロセスが graceful shutdown(run.json は消さない)', async () => {
+  it('run.json の pid が別値・別サーバーは不在 → 自殺せず run.json を奪還する(孤児化耐性)', async () => {
     const root = await project();
-    const { s, h } = await start(root);
+    // 自ポートには自分しかいない(他サーバー不在)。
+    const { s, h } = await start(root, { probeHealthzStartedAt: vi.fn(async () => null) });
     const runPath = runtimePaths(root).runJson;
+    const mine = readRunJson(root);
 
-    const hijacked = { ...readRunJson(root), pid: 111111 };
-    fs.writeFileSync(runPath, JSON.stringify(hijacked));
+    fs.writeFileSync(runPath, JSON.stringify({ ...mine, pid: 111111, token: 'stale-token' }));
+
+    await s.selfCheckTick();
+
+    expect(h.exit).not.toHaveBeenCalled();
+    expect(h.watcher.close).not.toHaveBeenCalled();
+    // run.json は自分の pid/token に戻っている。
+    expect(readRunJson(root)).toEqual(mine);
+  });
+
+  it('run.json を別ポートの生きたサーバーが引き継いだ → graceful shutdown(run.json は消さない)', async () => {
+    const root = await project();
+    const { s, h } = await start(root, {
+      // run.json が指すポートに、自分とは別の startedAt のサーバーが応答する。
+      probeHealthzStartedAt: vi.fn(async () => '2099-01-01T00:00:00.000Z'),
+    });
+    const runPath = runtimePaths(root).runJson;
+    const taken = { ...readRunJson(root), pid: 111111, port: 7778 };
+    fs.writeFileSync(runPath, JSON.stringify(taken));
 
     await s.selfCheckTick();
 
     expect(h.watcher.close).toHaveBeenCalledTimes(1);
     expect(h.server.close).toHaveBeenCalledTimes(1);
     expect(h.exit).toHaveBeenCalledWith(0);
-    // 新しい方の run.json は残す。
     expect(fs.existsSync(runPath)).toBe(true);
     expect(readRunJson(root).pid).toBe(111111);
   });
 
-  it('run.json の projectRoot を書き換え → graceful shutdown', async () => {
+  it('run.json の projectRoot が化けた・別サーバー不在 → run.json を奪還する', async () => {
     const root = await project();
-    const { s, h } = await start(root);
+    const { s, h } = await start(root, { probeHealthzStartedAt: vi.fn(async () => null) });
     const runPath = runtimePaths(root).runJson;
-    fs.writeFileSync(runPath, JSON.stringify({ ...readRunJson(root), projectRoot: '/somewhere/else' }));
+    const mine = readRunJson(root);
+    fs.writeFileSync(runPath, JSON.stringify({ ...mine, projectRoot: '/somewhere/else' }));
 
     await s.selfCheckTick();
-    expect(h.exit).toHaveBeenCalledWith(0);
+    expect(h.exit).not.toHaveBeenCalled();
+    expect(readRunJson(root)).toEqual(mine);
   });
 
   it('run.json が自分のもの → mtime が touch される', async () => {
