@@ -267,7 +267,7 @@ function handleTopLevelError(err: unknown, program: Command): number {
 // (テストから import される場合は何もしない)。
 const invokedDirectly =
   process.argv[1] !== undefined &&
-  import.meta.url === pathToFileURL(process.argv[1]).href;
+  import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href;
 
 if (invokedDirectly) {
   void run(process.argv.slice(2)).then((code) => {
