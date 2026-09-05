@@ -6,7 +6,7 @@
 //   HTML をそのまま埋め込む(クライアント再サニタイズなし)。
 // - 上部: title / categories バッジ(`CategoryBadge`)/ tags(`TagChip` → `/?tag=<tag>`)/ created・updated。
 // - TOC + スクロールスパイ、`?q=` ハイライトは `MarkdownView` が担当。
-// - アクション: 「元ファイルのパスをコピー」(`navigator.clipboard`)、「Obsidian で開く」(`obsidian://`)。
+// - アクション: 「元ファイルのパスをコピー」(`navigator.clipboard`)。
 //   元ファイルパスは rendered レスポンスの `path`(vault 相対)を直接使う(一覧を逆引きしない)。
 // - 相対 `.md` リンクは `MarkdownView` がクリック横取り → ここで解決先ノートを引いて SPA 遷移。
 //   一覧はページ読み込み時には取得せず、相対リンクがクリックされたときだけ遅延取得する。
@@ -104,8 +104,8 @@ export default function NoteViewPage(): ReactElement {
         <section aria-label="壊れた frontmatter">
           <h1>frontmatter を解析できません</h1>
           <p>
-            このノートの frontmatter に問題があるため整形表示できません。編集は Obsidian
-            などのエディタで行ってください。
+            このノートの frontmatter に問題があるため整形表示できません。テキストエディタで
+            修正してください。
           </p>
           {detailMessage !== '' ? <p role="alert">{detailMessage}</p> : null}
           {filePath !== '' ? (
@@ -167,9 +167,6 @@ export default function NoteViewPage(): ReactElement {
           <button type="button" onClick={copyPath} disabled={filePath === ''}>
             元ファイルのパスをコピー
           </button>
-          {filePath !== '' ? (
-            <a href={`obsidian://open?path=${encodeURIComponent(filePath)}`}>Obsidian で開く</a>
-          ) : null}
         </p>
       </header>
 

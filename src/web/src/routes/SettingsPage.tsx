@@ -225,7 +225,7 @@ export default function SettingsPage(): ReactElement {
       <Section title="6. 既知の制限">
         <ul className={styles.limits}>
           <li>vault 内アセット(<code>![](attachments/x.png)</code> など)は現状表示されません。</li>
-          <li>ノートの編集は Web UI では行えません(Obsidian やエディタで編集してください)。</li>
+          <li>ノートの編集は Web UI では行えません(テキストエディタで編集してください)。</li>
           <li>検索はキーワード(部分一致)検索です。意味の近さでは検索しません。</li>
         </ul>
       </Section>

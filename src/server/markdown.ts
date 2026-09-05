@@ -177,7 +177,7 @@ export const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
     a: ['footnote-ref', 'footnote-backref'],
     input: ['task-list-item-checkbox'],
   },
-  allowedSchemes: ['http', 'https', 'mailto', 'obsidian'], // a[href] のスキーム。obsidian:// を明示許可
+  allowedSchemes: ['http', 'https', 'mailto'], // a[href] のスキーム
   allowedSchemesByTag: { img: ['http', 'https', 'data'] }, // 画像は http(s) と data:(小さいインライン画像)のみ
   allowProtocolRelative: false,
   transformTags: {

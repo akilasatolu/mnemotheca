@@ -195,11 +195,11 @@ describe('NoteViewPage', () => {
     renderAt('/note/n-1');
 
     await screen.findByRole('heading', { level: 1, name: 'テストノート' });
-    // Obsidian 導線は rendered.path から直接組み立てられる(一覧引き不要)。
-    const obsidian = screen.getByRole('link', { name: 'Obsidian で開く' });
-    expect(obsidian.getAttribute('href')).toBe(
-      `obsidian://open?path=${encodeURIComponent('knowledge/tech/web/test-note.md')}`,
-    );
+    // 「元ファイルのパスをコピー」は rendered.path から直接有効化される(一覧引き不要)。
+    const copyBtn = screen.getByRole('button', {
+      name: '元ファイルのパスをコピー',
+    }) as HTMLButtonElement;
+    expect(copyBtn.disabled).toBe(false);
 
     const fetchMock = globalThis.fetch as unknown as ReturnType<typeof vi.fn>;
     const listCalls = fetchMock.mock.calls.filter((c) => {
@@ -265,7 +265,12 @@ describe('NoteViewPage', () => {
     const { container } = renderAt('/note/n-1');
     await screen.findByRole('heading', { level: 1, name: 'テストノート' });
     // filePath(notePath)が確定してリンク横取りの effect が張り直されるのを待つ。
-    await screen.findByRole('link', { name: 'Obsidian で開く' });
+    await waitFor(() => {
+      const btn = screen.getByRole('button', {
+        name: '元ファイルのパスをコピー',
+      }) as HTMLButtonElement;
+      expect(btn.disabled).toBe(false);
+    });
 
     const relLink = Array.from(container.querySelectorAll('.markdown-body a')).find(
       (a) => a.getAttribute('href') === './sibling.md',
@@ -280,17 +285,6 @@ describe('NoteViewPage', () => {
     relLink.click();
 
     expect(await screen.findByRole('heading', { level: 1, name: '兄弟ノート' })).toBeDefined();
-  });
-
-  it('「Obsidian で開く」リンクが obsidian://open?path= を指す', async () => {
-    routeState = { rendered: { status: 200, body: RENDERED_OK }, notes: NOTES };
-    renderAt('/note/n-1');
-    await screen.findByRole('heading', { level: 1, name: 'テストノート' });
-
-    const link = screen.getByRole('link', { name: 'Obsidian で開く' });
-    expect(link.getAttribute('href')).toBe(
-      `obsidian://open?path=${encodeURIComponent('knowledge/tech/web/test-note.md')}`,
-    );
   });
 
   it('「元ファイルのパスをコピー」で navigator.clipboard.writeText を呼ぶ', async () => {

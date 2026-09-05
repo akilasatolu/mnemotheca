@@ -4,7 +4,7 @@ A local-first Markdown "second brain", fed from your AI chats through the Model
 Context Protocol (MCP).
 
 Your knowledge lives as plain `.md` files in a `vault/` directory you can open with
-Obsidian or any editor. Mnemotheca adds three things on top:
+any text editor. Mnemotheca adds three things on top:
 
 - **capture** — during a Claude conversation, ask it to save what you just worked out;
   it writes a well-formed note (frontmatter + summary + detail) into your vault
@@ -154,7 +154,7 @@ Start it yourself with `mnemo start` (or let Claude do it via `mnemo_show`):
 - **Categories** — folder tree on the left, note list on the right, sortable, with
   URL-synced filters
 - **Note view** — sanitized Markdown with a table of contents, search-term
-  highlighting, "copy path" and "open in Obsidian" actions
+  highlighting, and a "copy path" action
 - **Search** — keyword search (IME-aware, debounced). This is literal keyword
   matching over an n-gram index, **not** semantic/embedding search
 - **Dashboard** — save activity over time, by category, by mode

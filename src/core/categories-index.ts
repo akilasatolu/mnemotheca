@@ -7,7 +7,7 @@
 //
 // 原子性: 新しい categories/ ツリーを vault 内の一時ディレクトリ(`.categories.tmp-<rand>`)に
 // 丸ごと組み立ててから、既存 categories/ と入れ替える。組み立て中に失敗しても既存 categories/ は
-// 無傷(部分状態が Obsidian / UI に見えない)。
+// 無傷(部分状態が UI に見えない)。
 
 import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
