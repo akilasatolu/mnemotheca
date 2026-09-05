@@ -151,7 +151,15 @@ export interface RuntimePaths {
   locksDir: string;
 }
 
-/** ディレクトリが「実在 + 書き込み可 + POSIX では自分所有」か。 */
+/**
+ * ディレクトリが「実在 + 書き込み可 + (自分所有 または sticky bit 付き共有ディレクトリ)」か。
+ *
+ * `os.tmpdir()` のフォールバック先である `/tmp` は多くの POSIX 環境で root 所有だが、
+ * sticky bit(`drwxrwxrwt`)により他ユーザーのファイルを削除・リネームできないため、
+ * 共有領域として安全に書き込める(標準的な `/tmp` の運用と同じ)。単純な uid 不一致
+ * だけで弾くと、`TMPDIR` 未設定で起動したプロセス(MCP サーバー等)がこの安全な
+ * フォールバックにも書き込めず `RUNTIME_DIR_UNWRITABLE` になってしまう。
+ */
 function isUsableRuntimeDir(dir: string): boolean {
   try {
     const st = fs.statSync(dir);
@@ -160,7 +168,11 @@ function isUsableRuntimeDir(dir: string): boolean {
     }
     fs.accessSync(dir, fs.constants.W_OK);
     if (typeof process.getuid === 'function' && st.uid !== process.getuid()) {
-      return false;
+      const S_ISVTX = 0o1000; // sticky bit。Node の fs.constants には無い(POSIX 定数)。
+      const hasStickyBit = (st.mode & S_ISVTX) !== 0;
+      if (!hasStickyBit) {
+        return false;
+      }
     }
     return true;
   } catch {

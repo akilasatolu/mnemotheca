@@ -323,6 +323,23 @@ describe('runtimeBase', () => {
     });
   });
 
+  it('accepts a not-owned-by-us MNEMO_RUNTIME_DIR when it has the sticky bit set (shared /tmp-style dir)', () => {
+    if (!HAS_UID || IS_WIN) return; // sticky bit の uid 回避は POSIX 専用
+    const dir = mkTmp('mnemo-rt-sticky-');
+    fs.chmodSync(dir, 0o1777);
+    process.env.MNEMO_RUNTIME_DIR = dir;
+    const realStat = fs.statSync.bind(fs);
+    vi.spyOn(fs, 'statSync').mockImplementation(((p: fs.PathLike) => {
+      const st = realStat(p);
+      if (String(p) === dir) {
+        // 他ユーザー所有(例: root 所有の /tmp)を偽装
+        Object.defineProperty(st, 'uid', { value: (st.uid ?? 0) + 99999, configurable: true });
+      }
+      return st;
+    }) as typeof fs.statSync);
+    expect(runtimeBase()).toBe(path.resolve(dir));
+  });
+
   it('falls through a non-writable XDG_RUNTIME_DIR (EACCES) to os.tmpdir() on Linux', () => {
     const xdg = mkTmp('mnemo-xdg-');
     process.env.XDG_RUNTIME_DIR = xdg;
