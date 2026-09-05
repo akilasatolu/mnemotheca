@@ -72,6 +72,12 @@ export interface BootDeps {
   isPortFree: (port: number) => Promise<boolean>;
   /** 稼働中サーバーの `/healthz` を叩き projectRoot 一致を確認(多重起動防止。§12-5)。 */
   probeHealthz: (port: number, projectRoot: string) => Promise<boolean>;
+  /**
+   * `port` の `/healthz` を叩き、`ok` かつ projectRoot 一致なら `startedAt` を返す(不一致 / 無応答 → null)。
+   * セルフチェックが「run.json のスロットを引き継いだのは *別の生きたサーバー* か、それとも
+   * 単に古い / 巻き戻った run.json なのか」を見分けるのに使う(§12-6)。
+   */
+  probeHealthzStartedAt: (port: number, projectRoot: string) => Promise<string | null>;
   /** pid が生存しているか。既定は `process.kill(pid, 0)`。 */
   isPidAlive: (pid: number) => boolean;
   now: () => Date;
@@ -87,6 +93,8 @@ export interface BootDeps {
 export interface StartedServer {
   port: number;
   token: string;
+  /** このサーバーが所有する run.json の絶対パス(直接起動ガードの同期クリーンアップ用)。 */
+  runJsonPath: string;
   /** run.json 削除 + watcher close + server close。冪等。 */
   stop(): Promise<void>;
   /**
@@ -130,6 +138,25 @@ async function defaultProbeHealthz(port: number, projectRoot: string): Promise<b
   }
 }
 
+async function defaultProbeHealthzStartedAt(port: number, projectRoot: string): Promise<string | null> {
+  try {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), 1000);
+    let res: Response;
+    try {
+      res = await fetch(`http://127.0.0.1:${port}/healthz`, { signal: ac.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+    if (!res.ok) return null;
+    const body = (await res.json()) as { projectRoot?: unknown; startedAt?: unknown };
+    if (body.projectRoot !== projectRoot) return null;
+    return typeof body.startedAt === 'string' ? body.startedAt : null;
+  } catch {
+    return null;
+  }
+}
+
 function defaultIsPidAlive(pid: number): boolean {
   try {
     process.kill(pid, 0);
@@ -168,6 +195,7 @@ function resolveDeps(over?: Partial<BootDeps>): BootDeps {
     runtimePaths,
     isPortFree: defaultIsPortFree,
     probeHealthz: defaultProbeHealthz,
+    probeHealthzStartedAt: defaultProbeHealthzStartedAt,
     isPidAlive: defaultIsPidAlive,
     now: () => new Date(),
     pid: process.pid,
@@ -291,6 +319,7 @@ export async function startServer(opts: StartServerOptions): Promise<StartedServ
     return {
       port: existing.port,
       token: existing.token,
+      runJsonPath,
       stop: async () => {},
       selfCheckTick: async () => {},
     };
@@ -452,10 +481,28 @@ export async function startServer(opts: StartServerOptions): Promise<StartedServ
       return;
     }
     if (info.pid !== d.pid || info.projectRoot !== projectRoot) {
-      // 別サーバーが同じスロットを奪った。自分は古い → run.json は消さずに graceful shutdown(§12-6)。
-      d.logger('run.json が別プロセス / 別 projectRoot に置き換わりました。graceful shutdown します。');
-      await cleanup(false);
-      d.exit(0);
+      // run.json が自分を指していない。原因は 2 通り:
+      //   (a) 別の生きたサーバーが本当にこのプロジェクトを引き継いだ → 自分は古い。step down。
+      //   (b) run.json が古い / 巻き戻った / 一時領域クリアで別内容に化けただけで、
+      //       このプロジェクトのサーバーは依然として自分 → run.json を奪還する(自殺しない)。
+      // 見分け方: run.json が指すポートの /healthz を叩き、そこが「自分の startedAt」でない
+      // 別サーバーで、かつ自分の listen ポートと異なるなら (a)。それ以外は (b)。
+      // 自分のポートは自分が bind し続けている限り他プロセスは奪えない(§12-5)ので、
+      // 自ポートに応答があれば必ず自分 = (b) に倒れる。
+      const runPort = typeof info.port === 'number' ? info.port : port;
+      const otherStartedAt = await d.probeHealthzStartedAt(runPort, projectRoot);
+      const differentLiveServer =
+        runPort !== port && otherStartedAt !== null && otherStartedAt !== startedAt;
+      if (differentLiveServer) {
+        d.logger(
+          `run.json を別の稼働サーバー(port ${runPort})が引き継ぎました。graceful shutdown します。`,
+        );
+        await cleanup(false);
+        d.exit(0);
+        return;
+      }
+      d.logger('run.json が古い / 別内容を指していますが、本サーバーは稼働中です。run.json を奪還します。');
+      await regenerate();
       return;
     }
     // 自分のもの → mtime を touch(一時領域のアイドルファイル削除ヒューリスティック回避。§12-6)。
@@ -473,7 +520,7 @@ export async function startServer(opts: StartServerOptions): Promise<StartedServ
   }, d.selfCheckIntervalMs);
   timer.unref();
 
-  return { port, token, stop, selfCheckTick };
+  return { port, token, runJsonPath, stop, selfCheckTick };
 }
 
 // ---------------------------------------------------------------------------
@@ -524,8 +571,25 @@ if (isDirectEntry()) {
       const dispatch = (): void => {
         void started.stop().finally(() => process.exit(0));
       };
+      // SIGHUP: 起動元ターミナルが閉じられたケース。これを拾わないと run.json が
+      // 死んだ pid を指したまま残り、以後 detectRunningServer が誤って「停止中」と返す。
+      process.on('SIGHUP', dispatch);
       process.on('SIGTERM', dispatch);
       process.on('SIGINT', dispatch);
+      // どの経路でプロセスが落ちても run.json を道連れにする最後の砦(同期・best-effort)。
+      // `stop()` が既に消していれば no-op。crash / SIGKILL 以外の想定外終了を掃除する。
+      // run.json の pid が自分のときだけ消す(既存サーバーを adopt しただけの spawn が
+      // 他人の run.json を削除しないため)。
+      process.on('exit', () => {
+        try {
+          const cur = JSON.parse(fs.readFileSync(started.runJsonPath, 'utf8')) as { pid?: unknown };
+          if (cur.pid === process.pid) {
+            fs.unlinkSync(started.runJsonPath);
+          }
+        } catch {
+          /* 既に無い / 読めない / 消せない → 無視 */
+        }
+      });
       // eslint-disable-next-line no-console
       console.error(`[mnemo:boot] listening on http://127.0.0.1:${started.port}`);
     })

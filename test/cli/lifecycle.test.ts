@@ -74,6 +74,7 @@ function fakeStarted(over: Partial<StartedServer> = {}): StartedServer {
   return {
     port: 7777,
     token: 'tok-abc',
+    runJsonPath: '/nonexistent/mnemo-fake-run.json',
     stop: vi.fn(async () => {}),
     selfCheckTick: async () => {},
     ...over,
